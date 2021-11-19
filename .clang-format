@@ -27,6 +27,6 @@ BraceWrapping:
   AfterNamespace: false
   SplitEmptyFunction: false
   AfterCaseLabel: true
-  AfterControlStatement: MultiLine
+  AfterControlStatement: Always
 
 SpaceAfterCStyleCast: true

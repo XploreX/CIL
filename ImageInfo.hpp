@@ -1,7 +1,7 @@
-#include <stdio.h>
+#include <iostream>
 #include <setjmp.h>
 #include <stdint.h>
-#include <iostream>
+#include <stdio.h>
 
 typedef enum
 {
@@ -19,9 +19,8 @@ struct ImageInfo
     uint8_t* data;
     void print_image_info()
     {
-        std :: cerr << "Width:\t" << width <<
-                    "\nHeight:\t" << height <<
-                    "\nNum Components:\t" << num_components <<
-                    "\nColor space:\t" << color_model << "\n";
+        std ::cerr << "Width:\t" << width << "\nHeight:\t" << height
+                   << "\nNum Components:\t" << num_components
+                   << "\nColor space:\t" << color_model << "\n";
     }
 };

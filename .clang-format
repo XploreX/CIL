@@ -1,6 +1,6 @@
 BasedOnStyle: LLVM
 IndentWidth: 4
-NamespaceIndentation: All
+NamespaceIndentation: None
 ColumnLimit: 80
 
 Language: Cpp

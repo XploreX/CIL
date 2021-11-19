@@ -1,5 +1,5 @@
 BasedOnStyle: LLVM
-IndentWidth: 2
+IndentWidth: 4
 NamespaceIndentation: All
 ColumnLimit: 80
 
@@ -26,3 +26,7 @@ BraceWrapping:
   AfterFunction: true
   AfterNamespace: false
   SplitEmptyFunction: false
+  AfterCaseLabel: true
+  AfterControlStatement: MultiLine
+
+SpaceAfterCStyleCast: true

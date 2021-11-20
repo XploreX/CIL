@@ -30,6 +30,7 @@ namespace CIL {
                        << "\nColor space:\t" << static_cast<int>(color_model)
                        << "\n";
         }
+        void *internal_info = nullptr;
     };
 
 } // namespace CIL

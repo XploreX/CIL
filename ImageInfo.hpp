@@ -8,10 +8,12 @@
 namespace CIL {
     enum class ColorModels
     {
-        COLOR_RBG,
-        COLOR_RBGA,
+        COLOR_RGB,
+        COLOR_RGBA,
         COLOR_CMYK,
-        COLOR_GRAYSCALE,
+        COLOR_GRAY,
+        COLOR_GRAY_ALPHA,
+        COLOR_PALETTE
     };
 
     struct ImageInfo

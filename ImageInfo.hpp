@@ -23,6 +23,7 @@ namespace CIL {
         int num_components;
         ColorModels color_model;
         uint8_t* data;
+        uint8_t sample_depth;
         void print_image_info()
         {
             std ::cerr << "Width:\t" << width << "\nHeight:\t" << height

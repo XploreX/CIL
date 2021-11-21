@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 namespace CIL {
-    enum class ColorModels
+    enum class ColorModel
     {
         COLOR_RGB,
         COLOR_RGBA,
@@ -21,7 +21,7 @@ namespace CIL {
         uint32_t width;
         uint32_t height;
         int num_components;
-        ColorModels color_model;
+        ColorModel color_model;
         uint8_t* data;
         uint8_t sample_depth;
         void print_image_info()

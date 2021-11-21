@@ -37,6 +37,9 @@ stamp-h1
 **/*.trs
 check
 
+# cscope files
+cscope.*
+
 libtool
 ltmain.sh
 m4/*.m4

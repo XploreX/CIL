@@ -1,16 +1,11 @@
-add_library(cil SHARED ImageInfo.cpp)
-add_library(cil_static STATIC ImageInfo.cpp)
+add_library(cil ImageInfo.cpp)
 
-set_target_properties(cil_static PROPERTIES OUTPUT_NAME cil)
+target_include_directories(cil PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
-if(${LIBPNG_DIR})
+if(LIBPNG_DIR)
     add_subdirectory(PNG)
 endif()
 
-set(HEADERS ${CMAKE_SOURCE_DIR}/include)
-
-target_include_directories(cil PUBLIC ${HEADERS})
-target_include_directories(cil_static PUBLIC ${HEADERS})
-
-install(TARGETS cil LIBRARY)
-install(TARGETS cil_static ARCHIVE)
+install(TARGETS cil 
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib)

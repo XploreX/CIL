@@ -12,7 +12,5 @@ set(HEADERS ${CMAKE_SOURCE_DIR}/include)
 target_include_directories(cil PUBLIC ${HEADERS})
 target_include_directories(cil_static PUBLIC ${HEADERS})
 
-add_subdirectory(PNG)
-
 install(TARGETS cil LIBRARY)
 install(TARGETS cil_static ARCHIVE)

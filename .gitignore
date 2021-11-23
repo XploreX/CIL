@@ -39,6 +39,7 @@ check
 
 # cscope files
 cscope.*
+compile_commands.json
 
 libtool
 ltmain.sh

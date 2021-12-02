@@ -100,7 +100,9 @@ namespace CIL {
             cinfo.image_width = image_info->width;
             cinfo.image_height = image_info->height;
             cinfo.input_components = image_info->num_components;
-            cinfo.in_color_space = image_info->old_img_info->color_model;
+            cinfo.in_color_space = static_cast<JPEG::ImageInfo>(
+                                       cil_image_info->interalInfo())
+                                       ->color_model;
 
             jpeg_set_defaults(&cinfo);
             jpeg_set_colorspace(&cinfo, image_info->color_model);
@@ -168,6 +170,14 @@ namespace CIL {
             char buffer[JMSG_LENGTH_MAX];
             (*cinfo->err->format_message)(cinfo, buffer);
             fprintf(stderr, "%s\n", buffer);
+        }
+
+        void* JPEGHandler::clone(void* internal_img_info)
+        {
+            auto jpeg_img_info = static_cast<JPEG::ImageInfo*>(
+                internal_img_info);
+            auto new_jpeg_img_info = new JPEG::ImageInfo(*jpeg_img_info);
+            return new_jpeg_img_info;
         }
 
         void JPEGHandler::destroy(CIL::ImageInfo* cil_image_info)

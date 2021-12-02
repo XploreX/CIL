@@ -21,6 +21,7 @@ namespace CIL {
             ImageInfo() {}
             ImageInfo(uint32_t width, uint32_t height, int num_components,
                       JColorType color_type, uint8_t* data);
+            // copy constructor
             ImageInfo(const JPEG::ImageInfo&);
             ImageInfo& operator=(const ImageInfo&);
             // move constructor

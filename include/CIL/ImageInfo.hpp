@@ -106,6 +106,10 @@ namespace CIL {
         const uint8_t& operator()(uint32_t row, uint32_t col, int comp) const;
         void printImageInfo();
         bool empty() const;
+
+      private:
+        void* cloneInternalInfo() const;
+        void destroyInternalInfo();
     };
 
     CIL::ImageInfo readImage(const char* filename);

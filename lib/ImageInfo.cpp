@@ -151,7 +151,6 @@ namespace CIL {
     }
     void* ImageInfo::cloneInternalInfo() const
     {
-        void* new_internal_info;
         switch (m_image_type)
         {
             case ImageType::PNG:

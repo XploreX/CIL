@@ -4,7 +4,6 @@
 #include <memory>
 
 namespace CIL {
-    class Pixel;
     class ImageMatrix
     {
       public:

@@ -35,6 +35,8 @@ exampledir = $(prefix)/examples
 examplejpegdir = $(exampledir)/JPEG
 examplepngdir = $(exampledir)/PNG
 
+dist_example_DATA = examples/scenary.ppm
+
 if JPEG
 examplejpeg_PROGRAMS = examples/JPEG/remove_red_from_rgb examples/JPEG/invert examples/JPEG/padImage examples/JPEG/edgeDetection examples/JPEG/resize
 dist_examplejpeg_DATA = examples/JPEG/in.jpg

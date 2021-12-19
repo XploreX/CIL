@@ -1,5 +1,5 @@
 ACLOCAL_AMFLAGS = -I m4
-SUBDIRS = include
+SUBDIRS = include .
 AM_DEFAULT_SOURCE_EXT = .cpp
 
 ## library libcil
@@ -27,9 +27,9 @@ endif
 libcil_la_CXXFLAGS += $(shell pkg-config --cflags $(PKGLIBS))
 libcil_la_LDFLAGS += $(shell pkg-config --libs $(PKGLIBS))
 
+LDADD = $(top_builddir)/libcil.la
 ## example codes
 if EXAMPLES
-LDADD = $(top_builddir)/libcil.la
 
 exampledir = $(prefix)/examples
 
@@ -44,15 +44,7 @@ example_PROGRAMS = examples/remove_red_from_rgb examples/invert \
 
 endif
 
+## Tests
 if TESTS
-LDADD = $(top_builddir)/libcil.la
-
-testsdir = $(prefix)/tests
-
-nobase_dist_tests_DATA = tests/in.ppm tests/in.png tests/in.jpeg tests/results/crop-1.jpeg tests/results/crop-1.png tests/results/crop-1.ppm
-
-tests_la_CXXFLAGS += $(shell pkg-config --cflags $(catch2))
-
-tests_PROGRAMS = tests/flip tests/crop tests/ 
-
+SUBDIRS += tests
 endif

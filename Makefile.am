@@ -44,3 +44,15 @@ example_PROGRAMS = examples/remove_red_from_rgb examples/invert \
 
 endif
 
+if TESTS
+LDADD = $(top_builddir)/libcil.la
+
+testsdir = $(prefix)/tests
+
+nobase_dist_tests_DATA = tests/in.ppm tests/in.png tests/in.jpeg tests/results/crop-1.jpeg tests/results/crop-1.png tests/results/crop-1.ppm
+
+tests_la_CXXFLAGS += $(shell pkg-config --cflags $(catch2))
+
+tests_PROGRAMS = tests/flip tests/crop tests/ 
+
+endif

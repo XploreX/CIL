@@ -82,6 +82,9 @@ namespace CIL {
 
         void convolute(const Sequence<double>& v);
     };
+
+    double computeErrorPercentage(const ImageMatrix& data1,
+                                  const ImageMatrix& data2);
 } // namespace CIL
 
 #endif

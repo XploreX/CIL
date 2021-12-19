@@ -121,4 +121,19 @@ namespace CIL {
         }
         *this = new_img;
     }
+
+    double computeErrorPercentage(const ImageMatrix& data1, const ImageMatrix& data2) {
+        double abs_error = 0;
+        double denominator = 0;
+
+        for (auto i=0U; i<data1.height(); ++i) {
+            for (auto j=0U; j<data1.width(); ++j) {
+                for (auto k=0; k<data1.numComponents(); ++k) {
+                    abs_error += std::abs(data1(i, j, k) - data2(i, j, k));
+                    denominator += data1(i, j, k);
+                }
+            }
+        }
+        return abs_error/denominator;
+    }
 } // namespace CIL

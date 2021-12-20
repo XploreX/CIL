@@ -17,7 +17,6 @@ AM_INIT_AUTOMAKE([foreign subdir-objects])
 # Initialize LIBTOOL_DEPS
 AC_SUBST([LIBTOOL_DEPS])
 LT_INIT
-AC_CONFIG_LINKS([tests/in.jpeg:tests/in.jpeg tests/in.png:tests/in.png tests/in.ppm:tests/in.ppm])
 
 AC_ARG_ENABLE([examples],
               [AS_HELP_STRING([--enable-examples],
@@ -31,12 +30,11 @@ AC_ARG_ENABLE([tests],
                               [Build Tests @<:@no@:>@])],
                               [tests="$enableval"],
                               [tests="no"])
-AM_CONDITIONAL([TESTS], [test x$tests = xyes])
+AM_CONDITIONAL([TESTS], [test x$tests = xyes ])
 AS_IF(
     [test "xtests$" = "xyes"],
     [PKG_CHECK_MODULES(
       [catch2], [catch2 >= 1.6.37],
-      [AM_CONDITIONAL([TESTS], [1])]
     )]
 )
 

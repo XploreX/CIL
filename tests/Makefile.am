@@ -1,3 +1,8 @@
+$(shell cp --no-target-directory -lr $(top_srcdir)/tests/results $(top_builddir)/tests/results)
+$(shell cp -l $(top_srcdir)/tests/in.png $(top_builddir)/tests/results/)
+$(shell cp -l $(top_srcdir)/tests/in.jpeg $(top_builddir)/tests/results/)
+$(shell cp -l $(top_srcdir)/tests/in.ppm $(top_builddir)/tests/results/)
+
 AM_DEFAULT_SOURCE_EXT = .cpp
 AM_CPPFLAGS += -I$(top_srcdir)/include
 

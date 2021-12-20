@@ -8,6 +8,7 @@ AC_CONFIG_HEADERS([include/config.h])
 # Add support for C and CPP files
 AC_PROG_CXX
 AC_PROG_CC
+AC_PROG_LN_S
 AM_CPPFLAGS="-std=c++11 -Wall -Wextra -Werror -pedantic -g "
 AC_SUBST([AM_CPPFLAGS])
 

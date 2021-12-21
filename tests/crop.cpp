@@ -6,6 +6,7 @@ TEST_CASE("crop-1", "[transformation][crop]")
 {
     auto img_ppm = CIL::readImage("in.ppm");
     CIL::cropImage(img_ppm, CIL::Dimensions(10));
+    img_ppm.save("crop-1.ppm");
     CHECK(CIL::equal(img_ppm, "results/crop-1.ppm") == true);
 
 #ifdef CIL_PNG_ENABLED

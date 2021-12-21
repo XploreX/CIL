@@ -6,6 +6,7 @@ TEST_CASE("rotate-1", "[transformation][rotate]")
 {
     auto img_ppm = CIL::readImage("in.ppm");
     CIL::rotate(img_ppm, 45);
+    img_ppm.save("rotate-1.ppm");
     CHECK(CIL::equal(img_ppm, "results/rotate-1.ppm") == true);
 
 #ifdef CIL_PNG_ENABLED

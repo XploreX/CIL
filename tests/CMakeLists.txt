@@ -13,10 +13,6 @@ if (CIL_ENABLE_JPEG)
     list(APPEND CMAKE_INSTALL_RPATH ${${ACTIVE_JPEG_LIB}_LIBRARY_DIRS})
 endif()
 
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        DESTINATION ${CMAKE_BINARY_DIR}
-        FILES_MATCHING REGEX ".*\.(jpeg|jpg|png|ppm)")
-
 file (GLOB_RECURSE
       images
       LIST_DIRECTORIES false
@@ -28,8 +24,7 @@ foreach(image IN LISTS images)
     file(RELATIVE_PATH image_rel_path ${CMAKE_CURRENT_SOURCE_DIR} ${image})
     set(output_image ${CMAKE_CURRENT_BINARY_DIR}/${image_rel_path})
     add_custom_command(OUTPUT ${output_image}
-                       COMMAND ${CMAKE_COMMAND} -E copy ${image} 
-                       ${output_image}
+                       COMMAND ${CMAKE_COMMAND} -E copy ${image} ${output_image}
                        DEPENDS ${image}
                        VERBATIM)
     list(APPEND test_image_files ${output_image})

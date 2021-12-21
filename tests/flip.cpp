@@ -6,7 +6,7 @@ TEST_CASE("flip-1", "[transformation][flip]")
 {
     auto img_ppm = CIL::readImage("in.ppm");
     CIL::flipImage(img_ppm, CIL::Axis::X);
-    img_ppm.save("flip-1.ppm");
+    // img_ppm.save("flip-1.ppm");
     CHECK(CIL::equal(img_ppm, "results/flip-1.ppm") == true);
 
 #ifdef CIL_PNG_ENABLED

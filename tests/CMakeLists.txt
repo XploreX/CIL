@@ -17,7 +17,7 @@ file (GLOB_RECURSE
       images
       LIST_DIRECTORIES false
       CONFIGURE_DEPENDS
-      *.jpeg *.jpeg *.png *.ppm)
+      *.jpeg *.jpg *.png *.ppm)
 
 set(test_image_files)
 foreach(image IN LISTS images)

@@ -3,15 +3,13 @@
 #include <iostream>
 int main(int argc, char* argv[])
 {
-    if (argc < 2)
+    if (argc < 3)
     {
-        std::cerr << "Usage: ./bin <in.png>";
+        std::cerr << "Usage: ./bin <image1> <image2>";
         return 1;
     }
     CIL::ImageInfo image1 = CIL::readImage(argv[1]);
-    CIL::ImageInfo image2 = CIL::readImage(argv[1]);
-    CIL::rotate(image1, 45);
-    CIL::rotate(image2, 45);
+    CIL::ImageInfo image2 = CIL::readImage(argv[2]);
     if (CIL::equal(image1, image2)) {
       std::cout<<"Images are equal\n";
     } else {

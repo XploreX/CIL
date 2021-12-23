@@ -126,15 +126,9 @@ namespace CIL {
         std::function<void(const typename ImageMatrix::ValueType&)> fn) const
     {
         for (auto i = 0U; i < m_height; ++i)
-        {
             for (auto j = 0U; j < m_width; ++j)
-            {
                 for (auto k = 0U; k < m_num_components; ++k)
-                {
                     fn((*this)(i, j, k));
-                }
-            }
-        }
     }
 
     void ImageMatrix::forEach(
@@ -143,15 +137,9 @@ namespace CIL {
             fn) const
     {
         for (auto i = 0U; i < m_height; ++i)
-        {
             for (auto j = 0U; j < m_width; ++j)
-            {
                 for (auto k = 0U; k < m_num_components; ++k)
-                {
                     fn((*this)(i, j, k), i, j, k);
-                }
-            }
-        }
     }
 
     ImageMatrix computeAbsDifference(const ImageMatrix& data1,
@@ -166,7 +154,9 @@ namespace CIL {
         data1.forEach([&data, &data2](const typename ImageMatrix::ValueType val,
                                       uint32_t row, uint32_t col,
                                       uint32_t comp) {
-            data(row, col, comp) = std::abs(val - data2(row, col, comp));
+            data(row, col,
+                 comp) = std::abs(static_cast<int>(val) -
+                                  static_cast<int>(data2(row, col, comp)));
         });
         return data;
     }

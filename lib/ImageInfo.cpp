@@ -196,7 +196,7 @@ namespace CIL {
         }
         double allowed_error_percentage = 0;
         if (img1.imageType() == ImageType::JPEG)
-            allowed_error_percentage = 0.03;
+            allowed_error_percentage = 1;
         double err_percentage = computeErrorPercentage(img1.getData(),
                                                        img2.getData());
         show(err_percentage);

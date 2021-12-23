@@ -123,17 +123,18 @@ namespace CIL {
     }
 
     double computeErrorPercentage(const ImageMatrix& data1, const ImageMatrix& data2) {
-        double abs_error = 0;
-        double denominator = 0;
-
-        for (auto i=0U; i<data1.height(); ++i) {
-            for (auto j=0U; j<data1.width(); ++j) {
+        double total_diff = 0;
+        auto width = data1.width();
+        auto height = data1.height();
+        for (auto i=0U; i<height; ++i) {
+            for (auto j=0U; j<width; ++j) {
                 for (auto k=0; k<data1.numComponents(); ++k) {
-                    abs_error += std::abs(data1(i, j, k) - data2(i, j, k));
-                    denominator += data1(i, j, k);
+                    total_diff += std::abs(data1(i, j, k) - data2(i, j, k));
                 }
             }
         }
-        return abs_error/denominator;
+        auto total_err = total_diff/255.0;
+        auto normalised_err = total_err/(width*height*data1.numComponents());
+        return normalised_err*100;
     }
 } // namespace CIL

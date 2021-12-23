@@ -17,7 +17,7 @@ AM_INIT_AUTOMAKE([foreign subdir-objects])
 
 # Initialize LIBTOOL_DEPS
 AC_SUBST([LIBTOOL_DEPS])
-LT_INIT
+LT_INIT([disable-shared])
 
 AC_ARG_ENABLE([examples],
               [AS_HELP_STRING([--enable-examples],

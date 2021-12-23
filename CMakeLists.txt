@@ -98,7 +98,7 @@ if(CIL_BUILD_EXAMPLES)
 endif()
 
 if(CIL_BUILD_TESTS) 
-    pkg_check_modules(CATCH2 catch2)
+    pkg_check_modules(CATCH2 catch2>=2.13.5)
     if (CATCH2_FOUND)
         message(STATUS "Catch2 ${CATCH2_VERSION} will be used to build tests for the project.")
         include(CTest)

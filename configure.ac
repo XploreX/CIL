@@ -35,7 +35,7 @@ AM_CONDITIONAL([TESTS], [test x$tests = xyes ])
 AS_IF(
     [test "xtests$" = "xyes"],
     [PKG_CHECK_MODULES(
-      [catch2], [catch2 >= 1.6.37],
+      [catch2], [catch2 >= 2.13.5],
     )]
 )
 

@@ -155,8 +155,8 @@ namespace CIL {
                                       uint32_t row, uint32_t col,
                                       uint32_t comp) {
             data(row, col,
-                 comp) = std::abs(static_cast<int>(val) -
-                                  static_cast<int>(data2(row, col, comp)));
+                 comp) = std::abs(static_cast<int16_t>(val) -
+                                  static_cast<int16_t>(data2(row, col, comp)));
         });
         return data;
     }

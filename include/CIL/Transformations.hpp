@@ -33,6 +33,7 @@ namespace CIL {
 
     void invertColor(ImageInfo&);
     void changeContrast(ImageInfo& img, const double contrast);
+    void changeBrightness(ImageInfo& img, int16_t brightness);
     void flipImage(ImageInfo& img, const Axis axis);
     void cropImage(ImageInfo& img, const Dimensions& dims);
     void padImage(ImageInfo& img, const Dimensions& dims);
@@ -43,6 +44,6 @@ namespace CIL {
     void convertToGrayscale(ImageInfo& img);
     void resize(ImageInfo& img, uint32_t new_width, uint32_t new_height,
                 ResizeAlgorithm resize_algorithm =
-                    ResizeAlgorithm::bilinear_interpolation);
+                    ResizeAlgorithm::bilinear_interpolation);                    
 } // namespace CIL
 #endif

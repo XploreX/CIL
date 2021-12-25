@@ -44,6 +44,6 @@ namespace CIL {
     void convertToGrayscale(ImageInfo& img);
     void resize(ImageInfo& img, uint32_t new_width, uint32_t new_height,
                 ResizeAlgorithm resize_algorithm =
-                    ResizeAlgorithm::bilinear_interpolation);                    
+                    ResizeAlgorithm::bilinear_interpolation);
 } // namespace CIL
 #endif

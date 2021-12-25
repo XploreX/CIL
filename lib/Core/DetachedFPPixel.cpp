@@ -49,8 +49,10 @@ namespace CIL {
                                ValueType());
     }
 
-    void DetachedFPPixel::bringInRange(double l, double r) {
-        for (auto i=0U; i<m_components.size(); ++i) {
+    void DetachedFPPixel::capRange(double l, double r)
+    {
+        for (auto i = 0U; i < m_components.size(); ++i)
+        {
             if (m_components[i] < l)
                 m_components[i] = l;
             else if (m_components[i] > r)
@@ -58,8 +60,11 @@ namespace CIL {
         }
     }
 
-    DetachedFPPixel& operator+=(DetachedFPPixel& lhs, typename DetachedFPPixel::ValueType val) {
-        for (auto i=0U; i<lhs.numComponents(); ++i) {
+    DetachedFPPixel& operator+=(DetachedFPPixel& lhs,
+                                typename DetachedFPPixel::ValueType val)
+    {
+        for (auto i = 0U; i < lhs.numComponents(); ++i)
+        {
             lhs[i] += val;
         }
         return lhs;

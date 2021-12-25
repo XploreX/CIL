@@ -37,7 +37,10 @@ namespace CIL {
         return (*m_image_matrix)(m_row, m_col, comp);
     }
 
-    uint8_t Pixel::numComponents() const { return m_image_matrix->numComponents(); }
+    uint8_t Pixel::numComponents() const
+    {
+        return m_image_matrix->numComponents();
+    }
 
     void Pixel::swap(Pixel& p1, Pixel& p2)
     {
@@ -116,7 +119,5 @@ namespace CIL {
         return *this;
     }
 
-    Pixel::ValueType& Pixel::back() {
-        return (*this)[numComponents()-1];
-    }
+    Pixel::ValueType& Pixel::back() { return (*this)[numComponents() - 1]; }
 } // namespace CIL

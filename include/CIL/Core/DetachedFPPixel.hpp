@@ -27,9 +27,9 @@ namespace CIL {
         std::size_t numComponents() const { return m_components.size(); }
         ValueType sum() const;
         void scale(const std::vector<ValueType> multipliers);
-        void bringInRange(double l, double r);
-        ValueType& back() { return m_components.back();}
-        const ValueType& back() const { return m_components.back();}
+        void capRange(double l, double r);
+        ValueType& back() { return m_components.back(); }
+        const ValueType& back() const { return m_components.back(); }
     };
 
     DetachedFPPixel operator*(double scale, const DetachedFPPixel& dpx);

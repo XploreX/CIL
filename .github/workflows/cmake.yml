@@ -17,9 +17,9 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        examples: ['-DCIL_BUILD_EXAMPLES=On']
-        test: ['-DCIL_BUILD_EXAMPLES=On']
-        shared: ['-DBUILD_SHARED_LIBS=On']
+        examples: ['Off', 'On']
+        test: ['Off', 'On']
+        shared: ['Off', 'On']
     runs-on: ${{ matrix.os }}
 
 
@@ -29,7 +29,7 @@ jobs:
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -DCIL_BUILD_TESTS=On -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{ matrix.examples }} ${{ matrix.test }} ${{ matrix.shared }}
+      run: cmake -DCIL_BUILD_TESTS=On -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCIL_BUILD_EXAMPLES=${{ matrix.examples }} -DCIL_BUILD_EXAMPLES=${{ matrix.test }} -DBUILD_SHARED_LIBS=${{ matrix.shared }}
 
     - name: Build
       # Build your program with the given configuration

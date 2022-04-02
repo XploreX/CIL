@@ -1,9 +1,10 @@
 #include <CIL/JPEG/JPEGCore.hpp>
 #include <cstring>
-
+#include <string>
 namespace CIL {
     namespace JPEG {
-        static ColorModel handleColorModel(const J_COLOR_SPACE jpeg_color_space)
+        const std::string jpeg_image_type = "JPEG";
+        ColorModel handleColorModel(const J_COLOR_SPACE jpeg_color_space)
         {
             switch (jpeg_color_space)
             {
@@ -13,7 +14,7 @@ namespace CIL {
                 default: throw("Unrecognised color model");
             }
         }
-        static J_COLOR_SPACE handleColorModel(const ColorModel cil_color_space)
+        J_COLOR_SPACE handleColorModel(const ColorModel cil_color_space)
         {
             switch (cil_color_space)
             {
@@ -88,8 +89,8 @@ namespace CIL {
             CIL::ImageInfo cil_img_info(m_width, m_height, m_num_components,
                                         sample_depth,
                                         handleColorModel(m_color_type),
-                                        CIL::ImageType::JPEG, std::move(data),
-                                        internal_info);
+                                        jpeg_image_type, std::move(data),
+                                        internal_info, jpeg_image_type);
             m_data = nullptr;
             return cil_img_info;
         }

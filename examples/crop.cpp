@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
         return 1;
     }
     CIL::ImageInfo image_info = CIL::readImage(argv[1]);
-    CIL::cropImage(image_info, CIL::Dimensions(10));
+    CIL::cropImage(image_info, CIL::Dimensions(50));
     image_info.save(argv[2]);
     return 0;
 }

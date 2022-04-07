@@ -92,6 +92,9 @@ namespace CIL {
         forEach(std::function<void(const typename ImageMatrix::ValueType&,
                                    uint32_t row, uint32_t col, uint32_t comp)>
                     fn) const;
+        uint8_t* getData() {
+          return m_data.get();
+        }
     };
     double computeErrorPercentage(const ImageMatrix& data1,
                                   const ImageMatrix& data2);

@@ -18,7 +18,6 @@ STRING(CONCAT catch2_dir_help "Path to catch2 installation directory, required"
 option(CATCH2_DIR catch2_dir_help)
 option(CIL_BUILD_EXAMPLES "Specify if examples should be added and built")
 option(CIL_BUILD_TESTS "Build tests as part of the 'all' build target. Default to Off")
-option(CIL_BUILD_CLI "Build command line tool for CIL.")
 
 if(DEFINED ENV{PKG_CONFIG_PATH})
     set(pkg_config_path $ENV{PKG_CONFIG_PATH})
@@ -93,6 +92,7 @@ else()
 endif()
 
 add_subdirectory(lib)
+add_subdirectory(tools)
 
 if(CIL_BUILD_EXAMPLES)
     add_subdirectory(examples)
@@ -108,10 +108,6 @@ if(CIL_BUILD_TESTS)
     else()
         message(WARNING "Catch2 not found. Tests cannot be built without Catch2. Skipping tests.")
     endif()
-endif()
-
-if(CIL_BUILD_CLI)
-    add_subdirectory(tools)
 endif()
 
 install(DIRECTORY include/ TYPE INCLUDE)

@@ -15,6 +15,6 @@ if (CIL_ENABLE_JPEG)
     list(APPEND CMAKE_INSTALL_RPATH ${${ACTIVE_JPEG_LIB}_LIBRARY_DIRS})
 endif()
 
-add_executable(cil_cli main.cpp)
-install(TARGETS cil_cli
+add_executable(cli cli.cpp)
+install(TARGETS cli
         DESTINATION bin)

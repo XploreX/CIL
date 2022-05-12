@@ -42,8 +42,8 @@ example_PROGRAMS = examples/remove_red_from_rgb examples/invert \
 				   examples/flipImage examples/rotateImage \
 				   examples/blur examples/grayscale \
 				   examples/crop examples/contrast \
-				   examples/drawPoint \
-					 examples/plainPPM
+				   examples/drawPoint examples/plainPPM \
+				   examples/gradient
 
 endif
 

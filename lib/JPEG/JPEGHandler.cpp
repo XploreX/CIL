@@ -4,6 +4,8 @@
 
 namespace CIL {
     namespace JPEG {
+        ColorModel handleColorModel(const J_COLOR_SPACE jpeg_color_space);
+        J_COLOR_SPACE handleColorModel(const ColorModel cil_color_space);
         CIL::ImageInfo JPEGHandler::read(const char* file_name)
         {
             JPEG::ImageInfo* image_info;
@@ -100,11 +102,20 @@ namespace CIL {
             cinfo.image_width = image_info->width();
             cinfo.image_height = image_info->height();
             cinfo.input_components = image_info->numComponents();
-            if (cil_image_info->colorModel() != ColorModel::COLOR_GRAY)
+            if (!cil_image_info->internalInfo())
             {
-                cinfo.in_color_space = static_cast<JPEG::ImageInfo*>(
-                                           cil_image_info->internalInfo())
-                                           ->colorType();
+                cinfo.in_color_space = handleColorModel(
+                    cil_image_info->colorModel());
+            } else if (cil_image_info->colorModel() != ColorModel::COLOR_GRAY)
+            {
+                if (cil_image_info->internalInfoImageType() == "JPEG")
+                    cinfo.in_color_space = static_cast<JPEG::ImageInfo*>(
+                                               cil_image_info->internalInfo())
+                                               ->colorType();
+                else
+                    cinfo.in_color_space = handleColorModel(
+                        cil_image_info->colorModel());
+
             } else
             {
                 cinfo.in_color_space = JCS_GRAYSCALE;
@@ -153,7 +164,7 @@ namespace CIL {
             return is_jpeg;
         }
 
-        bool JPEGHandler::isJPEGFile(const char* file_name)
+        bool JPEGHandler::isSupportedFile(const char* file_name)
         {
             FILE* fp = fopen(file_name, "rb");
             bool is_jpeg = isJPEGFile(fp);
@@ -178,7 +189,7 @@ namespace CIL {
             fprintf(stderr, "%s\n", buffer);
         }
 
-        void* JPEGHandler::clone(void* internal_img_info)
+        void* JPEGHandler::cloneInternalInfo(void* internal_img_info)
         {
             auto jpeg_img_info = static_cast<JPEG::ImageInfo*>(
                 internal_img_info);
@@ -186,11 +197,14 @@ namespace CIL {
             return new_jpeg_img_info;
         }
 
-        void JPEGHandler::destroy(CIL::ImageInfo* cil_image_info)
+        void
+        JPEGHandler::destroyInternalInfo(const CIL::ImageInfo* cil_image_info)
         {
             auto jpeg_img = static_cast<const JPEG::ImageInfo*>(
                 cil_image_info->internalInfo());
             delete jpeg_img;
         }
+
+        std::string JPEGHandler::imageType() { return "JPEG"; }
     } // namespace JPEG
 } // namespace CIL

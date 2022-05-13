@@ -20,6 +20,7 @@ jobs:
         examples: ['-DCIL_BUILD_EXAMPLES=Off', '-DCIL_BUILD_EXAMPLES=On']
         test: ['-DCIL_BUILD_TESTS=Off', '-DCIL_BUILD_TESTS=On']
         shared: ['-DBUILD_SHARED_LIBS=Off', '-DBUILD_SHARED_LIBS=On']
+        compiler: ['gcc', 'clang']
     runs-on: ${{ matrix.os }}
 
 
@@ -33,7 +34,26 @@ jobs:
           git checkout v2.x
           cmake -Bbuild -H. -DBUILD_TESTING=OFF
           sudo cmake --build build/ --target install
+          
+    - name: Set up Clang
+      if: ${{ matrix.compiler == 'clang' }}
+      uses: egor-tensin/setup-clang@v1
+      with:
+        version: latest
+        platform: x64
+        
+    - name: Set up Environment variables
+      if: ${{ matrix.compiler == 'clang' }}
+      run: |
+        export CC="clang"
+        export CXX="clang++"
 
+    - name: Set up Environment variables
+      if: ${{ matrix.compiler == 'gcc' }}
+      run: |
+        export CC="gcc"
+        export CXX="g++"
+        
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type

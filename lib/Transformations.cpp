@@ -65,27 +65,16 @@ namespace CIL {
     {
         ThreadHandler th;
         uint32_t outer, inner;
-        if (axis == Axis::Y)
-        {
-            outer = img.height();
-            inner = img.width() / 2;
-        } else
-        {
-            outer = img.width();
-            inner = img.height() / 2;
-        }
+
+        outer = (axis == Axis::Y) ? img.height() : img.width();
+        inner = (axis == Axis::Y) ? img.width() / 2 : img.height() / 2;
 
         th.fn = [&](int r, int c) {
             Pixel px1, px2;
-            if (axis == Axis::Y)
-            {
-                px1 = img(r, c);
-                px2 = img(r, img.width() - c - 1);
-            } else
-            {
-                px1 = img(c, r);
-                px2 = img(img.height() - c - 1, r);
-            }
+            px1 = (axis == Axis::Y) ? img(r, c) : img(c, r);
+            px2 = (axis == Axis::Y) ? img(r, img.width() - c - 1)
+                                    : img(img.height() - c - 1, r);
+
             if (likely(px1.isValid() && px2.isValid()))
                 Pixel::swap(px1, px2);
         };

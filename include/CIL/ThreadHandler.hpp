@@ -40,7 +40,7 @@ namespace CIL {
             index = index % processor_count;
         }
 
-        void process_image(std::size_t width, std::size_t height)
+        void process_matrix(std::size_t width, std::size_t height)
         {
             assert(fn && "fn should not be empty!!");
             for (std::size_t i = 0; i < height; ++i)

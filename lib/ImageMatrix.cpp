@@ -172,7 +172,7 @@ namespace CIL {
             }
         };
 
-        th.process_image(data1.width(), data1.height());
+        th.process_matrix(data1.width(), data1.height());
         return data;
     }
 

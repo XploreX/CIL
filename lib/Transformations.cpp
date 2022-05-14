@@ -20,7 +20,7 @@ namespace CIL {
                 img(r, c, i) = std::numeric_limits<uint8_t>::max() -
                                img(r, c, i);
         };
-        th.process_image(img.width(), img.height());
+        th.process_matrix(img.width(), img.height());
     }
 
     void changeContrast(ImageInfo& img, const double contrast)
@@ -41,7 +41,7 @@ namespace CIL {
                     px[i] = round(ans);
             }
         };
-        th.process_image(img.width(), img.height());
+        th.process_matrix(img.width(), img.height());
     }
 
     void changeBrightness(ImageInfo& img, int16_t brightness)
@@ -58,7 +58,7 @@ namespace CIL {
             }
             px = dpx;
         };
-        th.process_image(img.width(), img.height());
+        th.process_matrix(img.width(), img.height());
     }
 
     void flipImage(ImageInfo& img, const Axis axis)
@@ -90,7 +90,7 @@ namespace CIL {
                 Pixel::swap(px1, px2);
         };
 
-        th.process_image(inner, outer);
+        th.process_matrix(inner, outer);
     }
 
     void cropImage(ImageInfo& img, const Dimensions& dims)
@@ -109,7 +109,7 @@ namespace CIL {
                 px2.copyComponents(px1);
         };
 
-        th.process_image(new_width, new_height);
+        th.process_matrix(new_width, new_height);
 
         img.setData(new_img);
     }
@@ -130,7 +130,7 @@ namespace CIL {
                 px2.copyComponents(px1);
         };
 
-        th.process_image(img.width(), img.height());
+        th.process_matrix(img.width(), img.height());
         img.setData(new_img);
     }
 
@@ -260,7 +260,7 @@ namespace CIL {
             }
         };
 
-        th.process_image(new_image_data.width(), new_image_data.height());
+        th.process_matrix(new_image_data.width(), new_image_data.height());
         img.setData(new_image_data);
     }
 
@@ -287,7 +287,7 @@ namespace CIL {
             px = dpx;
         };
 
-        th.process_image(new_img_data.width(), new_img_data.height());
+        th.process_matrix(new_img_data.width(), new_img_data.height());
 
         if (!preserve_colortype)
         {
@@ -328,7 +328,7 @@ namespace CIL {
             }
         };
 
-        th.process_image(new_image_data.width(), new_image_data.height());
+        th.process_matrix(new_image_data.width(), new_image_data.height());
         img.setData(new_image_data);
     }
 

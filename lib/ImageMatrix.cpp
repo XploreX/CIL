@@ -2,6 +2,8 @@
 #include <CIL/Core/DetachedFPPixel.hpp>
 #include <CIL/ImageMatrix.hpp>
 #include <CIL/Pixel.hpp>
+#include <CIL/ThreadHandler.hpp>
+#include <atomic>
 #include <cassert>
 #include <cstring>
 #include <iostream>
@@ -146,21 +148,31 @@ namespace CIL {
     }
 
     ImageMatrix computeAbsDifference(const ImageMatrix& data1,
-                                     const ImageMatrix& data2)
+                                     const ImageMatrix& data2,
+                                     std::atomic_ullong* diff)
     {
+        ThreadHandler th;
         assert(data1.width() == data2.width() &&
                data1.height() == data2.height() &&
                data1.numComponents() == data2.numComponents() &&
                data1.sampleDepth() == data2.sampleDepth());
+
         ImageMatrix data(data1.width(), data2.height(), data1.numComponents(),
                          data1.sampleDepth());
-        data1.forEach([&data, &data2](const typename ImageMatrix::ValueType val,
-                                      uint32_t row, uint32_t col,
-                                      uint32_t comp) {
-            data(row, col,
-                 comp) = std::abs(static_cast<int16_t>(val) -
-                                  static_cast<int16_t>(data2(row, col, comp)));
-        });
+        if (diff)
+            *diff = 0;
+
+        th.fn = [&](int r, int c) {
+            for (auto i = 0U; i < data1.numComponents(); i++)
+            {
+                data(r, c, i) = std::abs(static_cast<int16_t>(data1(r, c, i)) -
+                                         static_cast<int16_t>(data2(r, c, i)));
+                if (diff)
+                    *diff += data(r, c, i);
+            }
+        };
+
+        th.process_image(data1.width(), data1.height());
         return data;
     }
 
@@ -171,11 +183,10 @@ namespace CIL {
                data1.height() == data2.height() &&
                data1.numComponents() == data2.numComponents() &&
                data1.sampleDepth() == data2.sampleDepth());
-        double total_diff = 0;
-        ImageMatrix diffMatrix = computeAbsDifference(data1, data2);
-        diffMatrix.forEach([&total_diff](const ImageMatrix::ValueType val) {
-            total_diff += val;
-        });
+
+        std::atomic_ullong total_diff;
+        ImageMatrix diffMatrix = computeAbsDifference(data1, data2,
+                                                      &total_diff);
         auto total_err = total_diff / 255.0;
         auto normalised_err = total_err / (data1.width() * data1.height() *
                                            data1.numComponents());

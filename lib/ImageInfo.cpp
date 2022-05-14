@@ -28,7 +28,7 @@ namespace CIL {
         return 1;
     }
     static int dummy = initializeImageHandlers();
-    
+
     void AddImageHandler(std::unique_ptr<ImageHandler> handler)
     {
         registered_image_handlers.push_back(std::move(handler));
@@ -48,10 +48,7 @@ namespace CIL {
     {}
 
     // TODO: We cannot just copy the internal_info pointer
-    ImageInfo::ImageInfo(const ImageInfo& other)
-    {
-        *this = other;
-    }
+    ImageInfo::ImageInfo(const ImageInfo& other) { *this = other; }
 
     ImageInfo& ImageInfo::operator=(const ImageInfo& other)
     {
@@ -67,10 +64,7 @@ namespace CIL {
     }
 
     // TODO: We cannot just copy the internal_info pointer
-    ImageInfo::ImageInfo(ImageInfo&& other)
-    {
-        *this = std::move(other);
-    }
+    ImageInfo::ImageInfo(ImageInfo&& other) { *this = std::move(other); }
 
     ImageInfo& ImageInfo::operator=(ImageInfo&& other)
     {

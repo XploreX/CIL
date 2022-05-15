@@ -4,6 +4,7 @@
 #include <CIL/Core/Types.hpp>
 #include <CIL/Core/Utils.hpp>
 #include <CIL/ImageInfo.hpp>
+#include <CIL/ThreadHandler.hpp>
 #include <CIL/Transformations.hpp>
 #include <cassert>
 #include <cmath>
@@ -12,114 +13,111 @@
 namespace CIL {
     void invertColor(ImageInfo& img)
     {
-        for (auto px : img)
-        {
-            for (int i = 0; i < px.numComponents() - img.hasAlphaComponent();
-                 i++)
-                px[i] = std::numeric_limits<uint8_t>::max() - px[i];
-        }
+        CIL::ThreadHandler th;
+        th.fn = [&img](int r, int c) {
+            for (auto i = 0U; i < img.numComponents(/*count_alpha=*/false); i++)
+                img(r, c, i) = CIL::Pixel::max() - img(r, c, i);
+        };
+        th.process_matrix(img.width(), img.height());
     }
 
     void changeContrast(ImageInfo& img, const double contrast)
     {
+        ThreadHandler th;
         double temp = 259 * (contrast + 255) / (255 * (259 - contrast));
-        for (auto px : img)
-        {
-            for (auto i = 0; i < px.numComponents() - img.hasAlphaComponent();
-                 i++)
+        th.fn = [&](int r, int c) {
+            auto px = img(r, c);
+            for (auto i = 0U; i < img.numComponents(/*count_alpha=*/false); i++)
             {
                 double ans = temp * (px[i] - 128) + 128;
-                if (ans > 255)
-                    px[i] = 255;
-                else if (ans < 0)
-                    px[i] = 0;
-                else
-                    px[i] = round(ans);
+                px[i] = (ans > CIL::Pixel::max())
+                            ? CIL::Pixel::max()
+                            : ((ans < 0) ? 0 : round(ans));
             }
-        }
+        };
+        th.process_matrix(img.width(), img.height());
     }
+
     void changeBrightness(ImageInfo& img, int16_t brightness)
     {
-        for (auto px : img)
-        {
+        ThreadHandler th;
+        th.fn = [&](int r, int c) {
+            auto px = img(r, c);
             DetachedFPPixel dpx(px);
+
             dpx += brightness;
             dpx.capRange(0, 255);
+
             if (img.hasAlphaComponent())
-            {
                 dpx.back() = px.back();
-            }
+
             px = dpx;
-        }
+        };
+        th.process_matrix(img.width(), img.height());
     }
 
     void flipImage(ImageInfo& img, const Axis axis)
     {
+        ThreadHandler th;
         uint32_t outer, inner;
-        if (axis == Axis::Y)
-        {
-            outer = img.height();
-            inner = img.width() / 2;
-        } else
-        {
-            outer = img.width();
-            inner = img.height() / 2;
-        }
-        for (uint32_t i = 0; i < outer; i++)
-        {
-            for (uint32_t j = 0; j < inner; j++)
-            {
-                Pixel px1, px2;
-                if (axis == Axis::Y)
-                {
-                    px1 = img(i, j);
-                    px2 = img(i, img.width() - j - 1);
-                } else
-                {
-                    px1 = img(j, i);
-                    px2 = img(img.height() - j - 1, i);
-                }
+
+        outer = (axis == Axis::Y) ? img.height() : img.width();
+        inner = (axis == Axis::Y) ? img.width() / 2 : img.height() / 2;
+
+        th.fn = [&](int r, int c) {
+            Pixel px1, px2;
+            px1 = (axis == Axis::Y) ? img(r, c) : img(c, r);
+            px2 = (axis == Axis::Y) ? img(r, img.width() - c - 1)
+                                    : img(img.height() - c - 1, r);
+
+            if (likely(px1.isValid() && px2.isValid()))
                 Pixel::swap(px1, px2);
-            }
-        }
+        };
+
+        th.process_matrix(inner, outer);
     }
 
     void cropImage(ImageInfo& img, const Dimensions& dims)
     {
-        auto px1 = img(0, 0);
-        px1.setBounds(dims);
-        px1.init();
+        ThreadHandler th;
 
         auto new_width = img.width() - dims.left - dims.right;
         auto new_height = img.height() - dims.top - dims.bottom;
 
         ImageMatrix new_img(new_width, new_height, img.numComponents(),
                             img.sampleDepth());
-        for (auto px2 : new_img)
 
-        {
-            px2.copyComponents(px1);
-            px1++;
-        }
-        assert(!px1.isValid() && "px1 didn't reach end");
+        th.fn = [&](int r, int c) {
+            auto px1 = img(dims.top + r, dims.left + c);
+            auto px2 = new_img(r, c);
+
+            if (likely(px1.isValid() && px2.isValid()))
+                px2.copyComponents(px1);
+        };
+
+        th.process_matrix(new_width, new_height);
+
         img.setData(new_img);
     }
 
     void padImage(ImageInfo& img, const Dimensions& dims)
     {
+        ThreadHandler th;
         auto new_width = img.width() + dims.left + dims.right;
         auto new_height = img.height() + dims.top + dims.bottom;
 
         ImageMatrix new_img(new_width, new_height, img.numComponents(),
                             img.sampleDepth());
 
-        Pixel px1 = new_img(dims.top, dims.left);
-        px1.setBounds(dims);
-        for (auto px2 : img)
-        {
-            px1.copyComponents(px2);
-            ++px1;
-        }
+        th.fn = [&](int r, int c) {
+            auto px1 = img(r, c);
+            auto px2 = new_img(dims.top + r, dims.left + c);
+
+            if (likely(px1.isValid() && px2.isValid()))
+                px2.copyComponents(px1);
+        };
+
+        th.process_matrix(img.width(), img.height());
         img.setData(new_img);
     }
 
@@ -221,13 +219,14 @@ namespace CIL {
     // TODO: Add `preserve_image` parameter.
     void rotate(ImageInfo& img, int degrees, RotationKind rotation_kind)
     {
-        ImageMatrix tf_img_data(img.width(), img.height(), img.numComponents(),
-                                img.sampleDepth());
-
+        ThreadHandler th;
+        ImageMatrix new_image_data(img.width(), img.height(),
+                                   img.numComponents(), img.sampleDepth(),
+                                   nullptr, img.hasAlphaComponent());
         Coordinate origin((img.width() / 2) + 0.5, (img.height() / 2) + 0.5);
 
-        for (auto px : tf_img_data)
-        {
+        th.fn = [&](int row, int col) {
+            auto px = new_image_data(row, col);
             Coordinate P(px.col() + 0.5, px.row() + 0.5);
             auto source = utils::computeCoordinateAfterRotation(origin, P,
                                                                 -degrees);
@@ -239,19 +238,22 @@ namespace CIL {
                 auto source_pixel = img(std::lround(source.y),
                                         std::lround(source.x));
                 if (!source_pixel.isValid())
-                    continue;
+                    return;
 
                 for (auto i = 0; i < px.numComponents(); ++i)
                 {
                     px[i] = source_pixel[i];
                 }
             }
-        }
-        img.setData(tf_img_data);
+        };
+
+        th.process_matrix(new_image_data.width(), new_image_data.height());
+        img.setData(new_image_data);
     }
 
     void convertToGrayscale(ImageInfo& img, bool preserve_colortype)
     {
+        ThreadHandler th;
         if (img.colorModel() == ColorModel::COLOR_GRAY ||
             img.colorModel() == ColorModel::COLOR_GRAY_ALPHA)
             return;
@@ -261,8 +263,8 @@ namespace CIL {
         ImageMatrix new_img_data(img.width(), img.height(), num_components,
                                  img.sampleDepth());
 
-        for (auto px : new_img_data)
-        {
+        th.fn = [&](int r, int c) {
+            auto px = new_img_data(r, c);
             DetachedFPPixel dpx = img(px.row(), px.col());
             dpx.scale({0.299, 0.587, 0.114});
             auto gray_value = std::lround(dpx.sum(/*exclude_alpha=*/true));
@@ -270,7 +272,10 @@ namespace CIL {
                                          val) { val = gray_value; },
                         /*exclude_alpha=*/true);
             px = dpx;
-        }
+        };
+
+        th.process_matrix(new_img_data.width(), new_img_data.height());
+
         if (!preserve_colortype)
         {
             if (img.hasAlphaComponent())
@@ -284,14 +289,15 @@ namespace CIL {
     void resize(ImageInfo& img, uint32_t new_width, uint32_t new_height,
                 ResizeAlgorithm resize_algorithm)
     {
+        ThreadHandler th;
         double scale_x = (new_width * 1.00) / img.width();
         double scale_y = (new_height * 1.00) / img.height();
 
         ImageMatrix new_image_data(new_width, new_height, img.numComponents(),
                                    img.sampleDepth());
 
-        for (auto px : new_image_data)
-        {
+        th.fn = [&](int row, int col) {
+            auto px = new_image_data(row, col);
             Coordinate source = {px.col() / scale_x, px.row() / scale_y};
             switch (resize_algorithm)
             {
@@ -307,7 +313,9 @@ namespace CIL {
                     px = utils::bilinearInterpolation(img, source);
                     break;
             }
-        }
+        };
+
+        th.process_matrix(new_image_data.width(), new_image_data.height());
         img.setData(new_image_data);
     }
 

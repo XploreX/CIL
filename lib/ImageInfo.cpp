@@ -28,7 +28,7 @@ namespace CIL {
         return 1;
     }
     static int dummy = initializeImageHandlers();
-    
+
     void AddImageHandler(std::unique_ptr<ImageHandler> handler)
     {
         registered_image_handlers.push_back(std::move(handler));
@@ -48,10 +48,7 @@ namespace CIL {
     {}
 
     // TODO: We cannot just copy the internal_info pointer
-    ImageInfo::ImageInfo(const ImageInfo& other)
-    {
-        *this = other;
-    }
+    ImageInfo::ImageInfo(const ImageInfo& other) { *this = other; }
 
     ImageInfo& ImageInfo::operator=(const ImageInfo& other)
     {
@@ -67,10 +64,7 @@ namespace CIL {
     }
 
     // TODO: We cannot just copy the internal_info pointer
-    ImageInfo::ImageInfo(ImageInfo&& other)
-    {
-        *this = std::move(other);
-    }
+    ImageInfo::ImageInfo(ImageInfo&& other) { *this = std::move(other); }
 
     ImageInfo& ImageInfo::operator=(ImageInfo&& other)
     {
@@ -122,7 +116,11 @@ namespace CIL {
 
     uint32_t ImageInfo::width() const { return m_data.width(); }
     uint32_t ImageInfo::height() const { return m_data.height(); }
-    uint32_t ImageInfo::numComponents() const { return m_data.numComponents(); }
+    uint32_t ImageInfo::numComponents(bool count_alpha) const
+    {
+        return (count_alpha) ? m_data.numComponents()
+                             : m_data.numComponents() - m_data.hasAlpha();
+    }
     uint32_t ImageInfo::sampleDepth() const { return m_data.sampleDepth(); }
     ColorModel ImageInfo::colorModel() const { return m_color_model; }
     uint64_t ImageInfo::size() const { return width() * height(); }

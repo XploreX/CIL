@@ -4,7 +4,7 @@ target_include_directories(cil PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
-target_link_libraries(cil PRIVATE Threads::Threads)
+target_link_libraries(cil PUBLIC Threads::Threads)
 
 if (CIL_ENABLE_JPEG)
     target_compile_definitions(cil PUBLIC CIL_JPEG_ENABLED)
@@ -26,6 +26,6 @@ endif()
 
 add_subdirectory(Core)
 
-install(TARGETS cil 
+install(TARGETS cil
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib)

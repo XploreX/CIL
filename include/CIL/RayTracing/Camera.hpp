@@ -14,8 +14,6 @@ namespace CIL {
             : m_origin(origin), m_horizontal(Vector3D(viewport_width, 0, 0)),
               m_vertical(Vector3D(0.0, viewport_height, 0.0))
         {
-            m_origin = Point3D(0, 0, 0);
-            m_horizontal = Vector3D(viewport_width, 0.0, 0.0);
             m_lower_left_corner = m_origin - m_horizontal / 2 - m_vertical / 2 -
                                   Vector3D(0, 0, focal_length);
         }

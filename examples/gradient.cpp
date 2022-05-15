@@ -1,6 +1,7 @@
 #include <CIL/ImageInfo.hpp>
 #include <CIL/RayTracing/Camera.hpp>
 #include <CIL/RayTracing/Ray.hpp>
+#include <CIL/ThreadHandler.hpp>
 
 CIL::ColorMap rayColor(const CIL::Ray& r)
 {
@@ -13,6 +14,7 @@ CIL::ColorMap rayColor(const CIL::Ray& r)
 
 int main(int argc, const char** argv)
 {
+    CIL::ThreadHandler th;
     if (argc < 2)
     {
         std::cerr << "Usage: ./bin <out.jpeg>";
@@ -35,12 +37,14 @@ int main(int argc, const char** argv)
 
     CIL::ImageMatrix data(image_width, image_height, num_components,
                           sample_depth);
-    // Implement multiprocessing here
-    for (auto i : data)
-    {
-        CIL::Ray r = cam.get_ray(data, i);
-        i.assign(rayColor(r));
-    }
+
+    th.fn = [&](int r, int c) {
+        CIL::Ray ray = cam.get_ray(data, data(r, c));
+        data(r, c).assign(rayColor(ray));
+    };
+
+    th.process_matrix(data.width(), data.height());
+
     CIL::ImageInfo img(CIL::ColorModel::COLOR_RGB, "JPEG", data);
     img.save(argv[1]);
     return 0;

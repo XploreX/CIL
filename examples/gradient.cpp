@@ -7,7 +7,7 @@ CIL::ColorMap rayColor(const CIL::Ray& r)
     CIL::Vector3D unit_direction = unit_vector(r.direction());
     auto t = 0.5 * (unit_direction.y() + 1.0);
     assert(t < 1.00);
-    CIL::ColorMap o = (1.0 - t) * CIL::Color::BLACK + t * CIL::Color::BLUE;
+    CIL::ColorMap o = (1.0 - t) * CIL::Color::WHITE + t * CIL::Color::BLUE;
     return o;
 }
 
@@ -28,7 +28,7 @@ int main(int argc, const char** argv)
     CIL::Camera cam(viewport_width, viewport_height, focal_length);
 
     // Image
-    const int image_width = 400;
+    const int image_width = 800;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int num_components = 3;
     const int sample_depth = 8;

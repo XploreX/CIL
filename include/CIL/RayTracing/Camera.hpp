@@ -18,17 +18,17 @@ namespace CIL {
                                   Vector3D(0, 0, focal_length);
         }
 
-        Ray get_ray(double u, double v) const
+        Ray get_ray(double normalised_x, double normalised_y) const
         {
-            return Ray(m_origin, m_lower_left_corner + u * m_horizontal +
-                                     v * m_vertical - m_origin);
+            return Ray(m_origin, m_lower_left_corner + normalised_x * m_horizontal +
+                                     normalised_y * m_vertical - m_origin);
         }
 
         Ray get_ray(const ImageMatrix& img_data, const Pixel p) const
         {
-            double u = static_cast<double>(p.row()) / (img_data.width() - 1);
-            double v = static_cast<double>(p.col()) / (img_data.height() - 1);
-            return get_ray(u, v);
+            double normalised_x = static_cast<double>(p.col()) / (img_data.width() - 1);
+            double normalised_y = 1 - static_cast<double>(p.row()) / (img_data.height() - 1);
+            return get_ray(normalised_x, normalised_y);
         }
 
       private:

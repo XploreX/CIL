@@ -3,6 +3,7 @@
 #include <CIL/Core/Debug.hpp>
 #include <cassert>
 #include <iostream>
+#include <limits>
 #include <memory>
 #include <stdint.h>
 
@@ -61,6 +62,7 @@ namespace CIL {
 
         uint32_t row() const { return m_row; }
         uint32_t col() const { return m_col; }
+        static ValueType max() { return std::numeric_limits<ValueType>::max(); }
         uint8_t numComponents() const;
         bool isValid() const;
         bool hasAlpha() const;

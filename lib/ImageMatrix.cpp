@@ -95,15 +95,20 @@ namespace CIL {
 
     void ImageMatrix::convolute(const Sequence<double>& v)
     {
+        ThreadHandler th;
         auto new_img = ImageMatrix(width() - v[0].size() + 1,
                                    height() - v.size() + 1, numComponents(),
                                    sampleDepth());
-        for (auto px : *this)
-        {
+
+        th.fn = [&](int r, int c) {
+            // fprintf(stderr, "Processing (%d, %d)\n", r, c);
+            auto px = (*this)(r, c);
+
             px.setBounds(
                 Dimensions(this, {0, 0}, new_img.width(), new_img.height()));
+
             if (!px.isValid())
-                continue;
+                return;
 
             auto boundedPx = px;
             boundedPx.setBounds(
@@ -123,7 +128,9 @@ namespace CIL {
                 }
 
             new_img(px.row(), px.col()) = dePx;
-        }
+        };
+
+        th.process_matrix(this->width(), this->height());
         *this = new_img;
     }
 

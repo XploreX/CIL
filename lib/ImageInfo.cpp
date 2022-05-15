@@ -116,7 +116,11 @@ namespace CIL {
 
     uint32_t ImageInfo::width() const { return m_data.width(); }
     uint32_t ImageInfo::height() const { return m_data.height(); }
-    uint32_t ImageInfo::numComponents() const { return m_data.numComponents(); }
+    uint32_t ImageInfo::numComponents(bool count_alpha) const
+    {
+        return (count_alpha) ? m_data.numComponents()
+                             : m_data.numComponents() - m_data.hasAlpha();
+    }
     uint32_t ImageInfo::sampleDepth() const { return m_data.sampleDepth(); }
     ColorModel ImageInfo::colorModel() const { return m_color_model; }
     uint64_t ImageInfo::size() const { return width() * height(); }

@@ -62,7 +62,7 @@ namespace CIL {
 
         uint32_t width() const;
         uint32_t height() const;
-        uint32_t numComponents() const;
+        uint32_t numComponents(bool count_alpha = true) const;
         uint32_t sampleDepth() const;
         uint64_t size() const;
         uint32_t rowbytes() const { return m_data.rowbytes(); }

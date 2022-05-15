@@ -15,10 +15,8 @@ namespace CIL {
     {
         CIL::ThreadHandler th;
         th.fn = [&img](int r, int c) {
-            for (auto i = 0U; i < img.numComponents() - img.hasAlphaComponent();
-                 i++)
-                img(r, c, i) = std::numeric_limits<uint8_t>::max() -
-                               img(r, c, i);
+            for (auto i = 0U; i < img.numComponents(/*count_alpha=*/false); i++)
+                img(r, c, i) = CIL::Pixel::max() - img(r, c, i);
         };
         th.process_matrix(img.width(), img.height());
     }
@@ -29,16 +27,12 @@ namespace CIL {
         double temp = 259 * (contrast + 255) / (255 * (259 - contrast));
         th.fn = [&](int r, int c) {
             auto px = img(r, c);
-            for (auto i = 0; i < px.numComponents() - img.hasAlphaComponent();
-                 i++)
+            for (auto i = 0U; i < img.numComponents(/*count_alpha=*/false); i++)
             {
                 double ans = temp * (px[i] - 128) + 128;
-                if (ans > 255)
-                    px[i] = 255;
-                else if (ans < 0)
-                    px[i] = 0;
-                else
-                    px[i] = round(ans);
+                px[i] = (ans > CIL::Pixel::max())
+                            ? CIL::Pixel::max()
+                            : ((ans < 0) ? 0 : round(ans));
             }
         };
         th.process_matrix(img.width(), img.height());
@@ -50,12 +44,13 @@ namespace CIL {
         th.fn = [&](int r, int c) {
             auto px = img(r, c);
             DetachedFPPixel dpx(px);
+
             dpx += brightness;
             dpx.capRange(0, 255);
+
             if (img.hasAlphaComponent())
-            {
                 dpx.back() = px.back();
-            }
+
             px = dpx;
         };
         th.process_matrix(img.width(), img.height());
@@ -91,9 +86,11 @@ namespace CIL {
 
         ImageMatrix new_img(new_width, new_height, img.numComponents(),
                             img.sampleDepth());
+
         th.fn = [&](int r, int c) {
             auto px1 = img(dims.top + r, dims.left + c);
             auto px2 = new_img(r, c);
+
             if (likely(px1.isValid() && px2.isValid()))
                 px2.copyComponents(px1);
         };
@@ -115,6 +112,7 @@ namespace CIL {
         th.fn = [&](int r, int c) {
             auto px1 = img(r, c);
             auto px2 = new_img(dims.top + r, dims.left + c);
+
             if (likely(px1.isValid() && px2.isValid()))
                 px2.copyComponents(px1);
         };

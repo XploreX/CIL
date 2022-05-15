@@ -28,8 +28,8 @@ namespace CIL {
 
         Ray get_ray(const ImageMatrix& img_data, const Pixel p) const
         {
-            double u = static_cast<double>(p.row()) / img_data.width();
-            double v = static_cast<double>(p.col()) / img_data.height();
+            double u = static_cast<double>(p.row()) / (img_data.width() - 1);
+            double v = static_cast<double>(p.col()) / (img_data.height() - 1);
             return get_ray(u, v);
         }
 

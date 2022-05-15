@@ -125,7 +125,8 @@ namespace CIL {
         assert(numComponents() >= color.numComponents());
         for (auto i = 0U; i < color.numComponents(); ++i)
         {
-            (*this)[i] = color[i];
+            assert(color[i] <= std::numeric_limits<uint8_t>::max());
+            (*this)[i] = static_cast<uint8_t>(color[i]);
         }
     }
 

@@ -1,14 +1,13 @@
 #ifndef JPEG_HPP
 #define JPEG_HPP
 
-#include <CIL/ImageInfo.hpp>
 #include <CIL/ImageHandler.hpp>
+#include <CIL/ImageInfo.hpp>
 #include <iostream>
 #include <jpeglib.h>
 #include <setjmp.h>
 #include <stdint.h>
 #include <stdio.h>
-
 
 namespace CIL {
     namespace JPEG {
@@ -17,7 +16,7 @@ namespace CIL {
           public:
             CIL::ImageInfo read(const char* file_name) override;
             bool write(const CIL::ImageInfo* image_info,
-                              const char* file_name) override;
+                       const char* file_name) override;
             bool isSupportedFile(const char* file_name) override;
             std::string imageType() override;
             void destroyInternalInfo(const CIL::ImageInfo* image_info) override;

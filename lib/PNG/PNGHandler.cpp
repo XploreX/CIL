@@ -129,7 +129,8 @@ namespace CIL {
             return is_png;
         }
 
-        void PNGHandler::destroyInternalInfo(const CIL::ImageInfo* cil_image_info)
+        void
+        PNGHandler::destroyInternalInfo(const CIL::ImageInfo* cil_image_info)
         {
             auto ptr = static_cast<PNG::ImageInfo*>(
                 (cil_image_info->internalInfo()));
@@ -143,8 +144,6 @@ namespace CIL {
             return new_png_img_info;
         }
 
-        std::string PNGHandler::imageType() {
-            return "PNG";
-        }
+        std::string PNGHandler::imageType() { return "PNG"; }
     } // namespace PNG
 } // namespace CIL

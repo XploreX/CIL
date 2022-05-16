@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
     }
     CIL::RegisterImageHandler<PlainPPMHandler>();
     CIL::ImageInfo image_info = CIL::readImage(argv[1]);
-    std::cout<<"Converting image to Plain PPM format\n";
+    std::cout << "Converting image to Plain PPM format\n";
     image_info.setImageType("PLAIN_PPM");
     image_info.save(argv[2]);
     return 0;

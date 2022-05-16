@@ -195,8 +195,9 @@ namespace CIL {
             delete[] m_scanlines;
             m_scanlines = static_cast<png_bytepp>(nullptr);
             CIL::ImageInfo cil_img_info(m_width, m_height, m_num_channels,
-                                        m_sample_depth, color_model, PNG_image_type,
-                                        std::move(data), internal_info, PNG_image_type);
+                                        m_sample_depth, color_model,
+                                        PNG_image_type, std::move(data),
+                                        internal_info, PNG_image_type);
             return cil_img_info;
         }
 
@@ -222,11 +223,13 @@ namespace CIL {
             {
                 m_scanlines[i] = data + i * m_rowbytes;
             }
-            if (cil_img_info->internalInfoImageType() == PNG_image_type) {
+            if (cil_img_info->internalInfoImageType() == PNG_image_type)
+            {
                 m_interlace_type = internal_info->m_interlace_type;
                 m_compression_type = internal_info->m_compression_type;
                 m_filter_type = internal_info->m_filter_type;
-            } else {
+            } else
+            {
                 m_interlace_type = PNG_INTERLACE_NONE;
                 m_compression_type = PNG_COMPRESSION_TYPE_BASE;
                 m_filter_type = PNG_FILTER_TYPE_BASE;

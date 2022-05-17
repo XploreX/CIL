@@ -10,16 +10,6 @@
 
 CIL::World world;
 
-CIL::ColorMap rayColor(const CIL::Ray& ray)
-{
-    double dist_begin = 0;
-    double dist_end = std::numeric_limits<double>::infinity();
-    CIL::HitInfo hit_info;
-    world.hit(ray, dist_begin, dist_end, hit_info);
-    assert(hit_info.is_valid());
-    return hit_info.color;
-}
-
 int main(int argc, const char** argv)
 {
     if (argc < 2)
@@ -55,20 +45,18 @@ int main(int argc, const char** argv)
             return o;
         }));
 
-    world.add(background);
     auto black_sphere = std::shared_ptr<CIL::Object>(
         new CIL::Sphere(CIL::Point3D(0, 0, -6), 2, CIL::Color::BLACK));
+
     auto red_sphere = std::shared_ptr<CIL::Object>(
         new CIL::Sphere(CIL::Point3D(-1.7, 0, -5), 2, CIL::Color::RED));
 
-    world.add(red_sphere);
+    world.add(background);
     world.add(black_sphere);
-    // Implement multiprocessing here
-    for (auto i : data)
-    {
-        CIL::Ray r = cam.get_ray(data, i);
-        i.assign(rayColor(r));
-    }
+    world.add(red_sphere);
+
+    world.generate_image(cam, data);
+
     CIL::ImageInfo img(CIL::ColorModel::COLOR_RGB, "JPEG", data);
     img.save(argv[1]);
     return 0;

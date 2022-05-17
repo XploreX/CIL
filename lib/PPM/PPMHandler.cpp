@@ -47,8 +47,6 @@ namespace CIL {
         return true;
     }
 
-    std::string PPMHandler::imageType() {
-        return m_image_type;
-    }
+    std::string PPMHandler::imageType() { return m_image_type; }
     const std::string PPMHandler::magic_bytes = "P6";
 } // namespace CIL

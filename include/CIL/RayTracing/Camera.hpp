@@ -20,14 +20,17 @@ namespace CIL {
 
         Ray get_ray(double normalised_x, double normalised_y) const
         {
-            return Ray(m_origin, m_lower_left_corner + normalised_x * m_horizontal +
+            return Ray(m_origin, m_lower_left_corner +
+                                     normalised_x * m_horizontal +
                                      normalised_y * m_vertical - m_origin);
         }
 
         Ray get_ray(const ImageMatrix& img_data, const Pixel p) const
         {
-            double normalised_x = static_cast<double>(p.col()) / (img_data.width() - 1);
-            double normalised_y = 1 - static_cast<double>(p.row()) / (img_data.height() - 1);
+            double normalised_x = static_cast<double>(p.col()) /
+                                  (img_data.width() - 1);
+            double normalised_y = 1 - static_cast<double>(p.row()) /
+                                          (img_data.height() - 1);
             return get_ray(normalised_x, normalised_y);
         }
 

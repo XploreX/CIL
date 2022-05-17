@@ -23,7 +23,7 @@ namespace CIL {
             /// Writes the image described by `cil_img_info` in the file
             /// `filename`.
             bool write(const CIL::ImageInfo* cil_img_info,
-                              const char* filename) override;
+                       const char* filename) override;
 
             /// Returns true if the provided filename is a PNG file; otherwise
             /// returns false.
@@ -32,14 +32,14 @@ namespace CIL {
             std::string imageType() override;
 
             /// Frees the `internal_info` pointer of `CIL::ImageInfo` object.
-            void destroyInternalInfo(const CIL::ImageInfo* cil_image_info) override;
+            void
+            destroyInternalInfo(const CIL::ImageInfo* cil_image_info) override;
 
             void* cloneInternalInfo(void* internal_img_info) override;
 
             /// Returns true if the provided file pointer points to the
             /// beginning of a PNG file.
             static bool isPNGFile(FILE* fp);
-
         };
 
     } // namespace PNG

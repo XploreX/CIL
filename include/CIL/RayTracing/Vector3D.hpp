@@ -12,9 +12,13 @@ namespace CIL {
         Vector3D() : coord{0, 0, 0} {}
         Vector3D(double x, double y, double z) : coord{x, y, z} {}
 
-        double x() const { return coord[0]; }
-        double y() const { return coord[1]; }
-        double z() const { return coord[2]; }
+        double& x() { return coord[0]; }
+        double& y() { return coord[1]; }
+        double& z() { return coord[2]; }
+
+        const double& x() const { return coord[0]; }
+        const double& y() const { return coord[1]; }
+        const double& z() const { return coord[2]; }
 
         Vector3D operator-() const
         {
@@ -103,6 +107,12 @@ namespace CIL {
     }
 
     inline Vector3D unit_vector(Vector3D v) { return v / v.magnitude(); }
+
+    inline double compute_distance(const Point3D p1, const Point3D p2)
+    {
+        auto p = p2 - p1;
+        return p.magnitude();
+    }
 } // namespace CIL
 
 #endif

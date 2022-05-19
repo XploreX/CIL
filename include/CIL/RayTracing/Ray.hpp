@@ -16,12 +16,16 @@ namespace CIL {
         Vector3D direction() const { return dir; }
 
         Point3D at(double t) const { return orig + t * dir; }
+        double length(double t) const
+        {
+            Point3D p = at(t);
+            return compute_distance(p, orig);
+        }
 
       public:
         Point3D orig;
         Vector3D dir;
     };
-
 } // namespace CIL
 
 #endif

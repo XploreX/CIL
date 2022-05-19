@@ -46,6 +46,7 @@ namespace CIL {
             double dist_end = std::numeric_limits<double>::infinity();
             CIL::HitInfo hit_info;
             this->hit(ray, dist_begin, dist_end, hit_info);
+            // background will always be hit
             assert(hit_info.is_valid());
             return hit_info.color;
         }

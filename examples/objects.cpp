@@ -38,22 +38,36 @@ int main(int argc, const char** argv)
     auto background = std::shared_ptr<CIL::Object>(
         new CIL::Background([&](const CIL::Ray& ray) {
             CIL::Vector3D unit_direction = unit_vector(ray.direction());
-            auto t = 0.5 * (unit_direction.y() + 1.0);
-            assert(t < 1.00);
+            // changing the range of t from 0 to 1
+            auto t = unit_direction.getInRange0to1().y();
+            assert(t >= 0.0 && t < 1.00);
             CIL::ColorMap o = (1.0 - t) * CIL::Color::WHITE +
                               t * CIL::Color::BLUE;
             return o;
         }));
 
-    auto black_sphere = std::shared_ptr<CIL::Object>(
-        new CIL::Sphere(CIL::Point3D(0, 0, -6), 2, CIL::Color::BLACK));
+    auto sphere_one = std::shared_ptr<CIL::Object>(
+        new CIL::Sphere(CIL::Point3D(0, 0, -6), 2,
+                        [](const CIL::Ray& r, CIL::HitInfo& hit_info) {
+                            UNUSED(r);
+                            CIL::ColorMap color = static_cast<CIL::ColorMap>(
+                                255.0 * hit_info.normal.getInRange0to1());
+                            hit_info.color = color;
+                        }));
 
-    auto red_sphere = std::shared_ptr<CIL::Object>(
-        new CIL::Sphere(CIL::Point3D(-1.7, 0, -5), 2, CIL::Color::RED));
+    auto sphere_two = std::shared_ptr<CIL::Object>(
+        new CIL::Sphere(CIL::Point3D(-1.7, 0, -5), 2,
+                        [](const CIL::Ray& r, CIL::HitInfo& hit_info) {
+                            UNUSED(r);
+                            CIL::ColorMap color = static_cast<CIL::ColorMap>(
+                                CIL::Color::RED -
+                                255.0 * hit_info.normal.getInRange0to1());
+                            hit_info.color = color;
+                        }));
 
     world.add(background);
-    world.add(black_sphere);
-    world.add(red_sphere);
+    world.add(sphere_one);
+    world.add(sphere_two);
 
     world.generate_image(cam, data);
 

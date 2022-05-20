@@ -56,7 +56,7 @@ jobs:
       run: |
         autoreconf -vif
         mkdir build && cd build
-        ../configure -- ${{ matrix.examples }} ${{ matrix.test }} ${{ matrix.libjpeg }} ${{ matrix.libpng }}
+        ../configure ${{ matrix.examples }} ${{ matrix.test }} ${{ matrix.libjpeg }} ${{ matrix.libpng }}
 
     - name: Build
       # Build your program with the given configuration

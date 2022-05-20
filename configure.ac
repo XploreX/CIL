@@ -54,11 +54,15 @@ AM_CONDITIONAL([JPEG], [test x$libjpeg = xyes])
 AS_IF(
     [test "x$libjpeg" = "xyes"],
     [PKG_CHECK_MODULES(
-      [libturbojpeg], [libturbojpeg >= 2.1.1], 
-      [AC_DEFINE([CIL_JPEG_ENABLED], [1], [Use LIBJPEG_TURBO])], 
+      [libturbojpeg], [libturbojpeg >= 2.1.1],
+      [AC_DEFINE([CIL_JPEG_ENABLED], [1], [Use LIBJPEG_TURBO])],
       [PKG_CHECK_MODULES(
          [libjpeg], [libjpeg >= 9.4.0],
-         [AC_DEFINE([CIL_JPEG_ENABLED], [1], [Use LIBJPEG])] 
+         [AC_DEFINE([CIL_JPEG_ENABLED], [1], [Use LIBJPEG])],
+         [PKG_CHECK_MODULES(
+             [libjpeg], [libjpeg >= 2.1.1],
+             [AC_DEFINE([CIL_JPEG_ENABLED], [1], [Use LIBJPEG])]
+         )]
       )]
     )]
 )
@@ -73,7 +77,7 @@ AS_IF(
     [test "x$libpng" = "xyes"],
     [PKG_CHECK_MODULES(
       [libpng], [libpng = 1.6.37],
-      [AC_DEFINE([CIL_PNG_ENABLED], [1], [Use LIBPNG])], 
+      [AC_DEFINE([CIL_PNG_ENABLED], [1], [Use LIBPNG])],
     )]
 )
 

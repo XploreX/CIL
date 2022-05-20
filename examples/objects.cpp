@@ -37,9 +37,8 @@ int main(int argc, const char** argv)
 
     auto background = std::shared_ptr<CIL::Object>(
         new CIL::Background([&](const CIL::Ray& ray) {
-            CIL::Vector3D unit_direction = unit_vector(ray.direction());
             // changing the range of t from 0 to 1
-            auto t = unit_direction.getInRange0to1().y();
+            auto t = ray.direction().getInRange0to1().y();
             assert(t >= 0.0 && t < 1.00);
             CIL::ColorMap o = (1.0 - t) * CIL::Color::WHITE +
                               t * CIL::Color::BLUE;

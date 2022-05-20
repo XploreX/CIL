@@ -1,0 +1,71 @@
+name: CMake
+
+on:
+  push:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
+    # You can convert this to a matrix build if you need cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        examples: ['--enable-examples', '--disable-examples']
+        test: ['--enable-tests', '--disable-tests']
+        libjpeg: ['--enable-libjpeg', '--disable-libjpeg']
+        libpng: ['--enable-libpng', '--disable-libpng']
+        compiler: ['gcc', 'clang']
+    runs-on: ${{ matrix.os }}
+
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install catch2
+      run: |
+          git clone https://github.com/catchorg/Catch2.git
+          cd Catch2
+          git checkout v2.x
+          cmake -Bbuild -H. -DBUILD_TESTING=OFF
+          sudo cmake --build build/ --target install
+          
+    - name: Set up Clang
+      if: ${{ matrix.compiler == 'clang' }}
+      uses: egor-tensin/setup-clang@v1
+      with:
+        version: latest
+        platform: x64
+        
+    - name: Set up Environment variables
+      if: ${{ matrix.compiler == 'clang' }}
+      run: |
+        export CC="clang"
+        export CXX="clang++"
+    - name: Set up Environment variables
+      if: ${{ matrix.compiler == 'gcc' }}
+      run: |
+        export CC="gcc"
+        export CXX="g++"
+        
+    - name: Configure Automake
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: |
+        autoreconf -vif
+        mkdir build && cd build
+        ../configure -- ${{ matrix.examples }} ${{ matrix.test }} ${{ matrix.libjpeg }} ${{ matrix.libpng }}
+
+    - name: Build
+      # Build your program with the given configuration
+      run: make install -j3
+
+    - name: Test
+      if: ${{ matrix.test == '--enable-tests' }}
+      working-directory: ${{github.workspace}}/build
+      # Execute tests defined by the CMake configuration.  
+      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+      run: |
+        make check -j3

@@ -60,7 +60,7 @@ jobs:
 
     - name: Build
       # Build your program with the given configuration
-      run: make install -j3
+      run: make -j3
 
     - name: Test
       if: ${{ matrix.test == '--enable-tests' }}

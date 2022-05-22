@@ -8,13 +8,14 @@
 
 #include <limits>
 #include <memory>
+#include <random>
 #include <vector>
 
 namespace CIL {
     class World
     {
       public:
-        World() = default;
+        World(std::size_t samples = 1) : m_samples(samples){};
 
         void add(std::shared_ptr<Object> object)
         {
@@ -56,8 +57,16 @@ namespace CIL {
             CIL::ThreadHandler th;
 
             th.fn = [&](int r, int c) {
-                CIL::Ray ray = cam.get_ray(data, data(r, c));
-                data(r, c).assign(rayColor(ray));
+                Vector3D pixel_color;
+                for (std::size_t i = 0; i < m_samples; ++i)
+                {
+                    CIL::Ray ray = cam.get_ray(data, data(r, c),
+                                               random_in_0_to_1(),
+                                               random_in_0_to_1());
+                    pixel_color += rayColor(ray);
+                }
+                pixel_color /= m_samples;
+                data(r, c).assign(ColorMap(pixel_color));
             };
 
             th.process_matrix(data.width(), data.height());
@@ -65,6 +74,14 @@ namespace CIL {
 
       private:
         std::vector<std::shared_ptr<Object>> m_objects;
+        std::size_t m_samples = 1;
+        double random_in_0_to_1()
+        {
+            static std::random_device rd;
+            static std::mt19937 gen(rd());
+            static std::uniform_real_distribution<double> dist(0.0, 1.0);
+            return dist(gen);
+        }
     };
 } // namespace CIL
 

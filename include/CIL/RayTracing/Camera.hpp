@@ -25,12 +25,13 @@ namespace CIL {
                                      normalised_y * m_vertical - m_origin);
         }
 
-        Ray get_ray(const ImageMatrix& img_data, const Pixel p) const
+        Ray get_ray(const ImageMatrix& img_data, const Pixel p,
+                    double x_rand = 0, double y_rand = 0) const
         {
-            double normalised_x = static_cast<double>(p.col()) /
-                                  (img_data.width() - 1);
-            double normalised_y = 1 - static_cast<double>(p.row()) /
-                                          (img_data.height() - 1);
+            double normalised_x = static_cast<double>(p.col() + x_rand) /
+                                  (img_data.width() - 1 + x_rand);
+            double normalised_y = 1 - static_cast<double>(p.row() + y_rand) /
+                                          (img_data.height() - 1 + y_rand);
             return get_ray(normalised_x, normalised_y);
         }
 

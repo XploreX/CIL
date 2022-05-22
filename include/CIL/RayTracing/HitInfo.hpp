@@ -3,9 +3,11 @@
 
 #include <CIL/RayTracing/Ray.hpp>
 #include <CIL/RayTracing/Vector3D.hpp>
+#include <future>
 #include <limits>
 
 namespace CIL {
+    class Material;
     class HitInfo
     {
       public:
@@ -13,8 +15,10 @@ namespace CIL {
         Point3D hit_point;
         Vector3D normal;
         bool front_face;
+        bool hit_background = false;
         ColorMap color = ColorMap({0, 0, 0});
         double distance = std::numeric_limits<double>::infinity();
+        std::shared_ptr<Material> material_ptr;
         bool is_valid()
         {
             return distance != std::numeric_limits<double>::infinity();

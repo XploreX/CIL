@@ -9,6 +9,7 @@ namespace CIL {
     class ImageInfo;
     namespace utils {
         extern const double pi;
+        double random_double(double min = 0, double max = 1);
         double convertDegreesToRadians(double degrees);
         Coordinate computeCoordinateAfterRotation(Coordinate origin,
                                                   Coordinate P, int degrees);

@@ -26,6 +26,7 @@ namespace CIL {
             hit_info.distance = distance;
             hit_info.hit_point = Point3D(distance, distance, distance);
             hit_info.color = m_compute_color(ray);
+            hit_info.hit_background = true;
             return true;
         }
 

@@ -3,8 +3,8 @@
 
 #include <CIL/RayTracing/Camera.hpp>
 #include <CIL/RayTracing/HitInfo.hpp>
+#include <CIL/RayTracing/Materials.hpp>
 #include <CIL/RayTracing/Object.hpp>
-#include <CIL/ThreadHandler.hpp>
 
 #include <limits>
 #include <memory>
@@ -41,12 +41,37 @@ namespace CIL {
             return hit_anything;
         }
 
-        CIL::ColorMap rayColor(const CIL::Ray& ray)
+        CIL::Vector3D rayColor(const CIL::Ray& ray, int depth = 0)
         {
+            const int max_depth = 50;
+            if (depth >= max_depth)
+                return CIL::Color::BLACK;
+
             double dist_begin = 0;
             double dist_end = std::numeric_limits<double>::infinity();
+
             CIL::HitInfo hit_info;
             this->hit(ray, dist_begin, dist_end, hit_info);
+            if (hit_info.hit_background)
+                return hit_info.color;
+            else
+            {
+                Ray scattered;
+                Vector3D attenuation;
+                if (hit_info.material_ptr != nullptr &&
+                    hit_info.material_ptr->scatter(ray, hit_info, attenuation,
+                                                   scattered))
+                {
+                    auto out = rayColor(scattered, depth + 1);
+                    //                    show(attenuation);
+                    //                    show(out);
+                    out = attenuation * out;
+                    // show(out);
+                    return out;
+                }
+                return hit_info.color;
+            }
+
             // background will always be hit
             assert(hit_info.is_valid());
             return hit_info.color;

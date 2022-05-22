@@ -10,6 +10,15 @@ namespace CIL {
     namespace utils {
         const double pi = std::atan(1.0) * 4;
 
+        double random_double(double min, double max)
+        {
+            // Returns a random real in [0,1).
+            double random = rand() / (RAND_MAX + 1.0);
+
+            // adjust to return between max and min
+            return min + (max - min) * random;
+        }
+
         double convertDegreesToRadians(double degrees)
         {
             return pi / 180 * degrees;

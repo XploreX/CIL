@@ -38,6 +38,20 @@ namespace CIL {
         th.process_matrix(img.width(), img.height());
     }
 
+    void changeGamma(ImageInfo& img, const double samples_per_pixel)
+    {
+        ThreadHandler th;
+        th.fn = [&](int r, int c) {
+            auto px = img(r, c);
+            // Divide the color by the number of samples and gamma-correct for
+            // gamma=2.0.
+            auto scale = 255.0 / samples_per_pixel;
+            for (auto i = 0U; i < img.numComponents(/*count_alpha=*/false); i++)
+                px[i] = sqrt(scale * px[i]);
+        };
+        th.process_matrix(img.width(), img.height());
+    }
+
     void changeBrightness(ImageInfo& img, int16_t brightness)
     {
         ThreadHandler th;

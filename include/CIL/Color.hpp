@@ -1,6 +1,7 @@
 #ifndef CIL_COLOR_HPP
 #define CIL_COLOR_HPP
 
+#include <CIL/Core/Debug.hpp>
 #include <cassert>
 #include <cstdint>
 #include <iostream>
@@ -18,6 +19,7 @@ namespace CIL {
         std::vector<ValueType> m_components;
 
       public:
+        ColorMap() = default;
         ColorMap(const int c) { m_components.resize(c); }
         ColorMap(const std::initializer_list<ValueType>& components)
             : m_components(components)
@@ -28,13 +30,14 @@ namespace CIL {
         ColorMap(const std::vector<double>& components)
         {
             m_components.resize(components.size());
-            uint8_t max = std::numeric_limits<ValueType>::max();
+            uint8_t max = std::numeric_limits<uint8_t>::max();
             for (auto i = 0U; i < m_components.size(); i++)
-                m_components[i] = (components[i] > static_cast<double>(max))
-                                      ? max
-                                      : components[i];
+                m_components[i] = ((components[i] > static_cast<uint8_t>(max))
+                                       ? max
+                                   : (components[i] < 0) ? 0
+                                                         : components[i]);
         }
-        explicit ColorMap(const CIL::Vector3D& v);
+        ColorMap(const CIL::Vector3D& v);
         ColorMap(const ColorMap& other) : m_components(other.m_components) {}
         ColorMap& operator=(const ColorMap& rhs)
         {
@@ -49,7 +52,7 @@ namespace CIL {
             for (auto i = 0U; i < m_components.size(); i++)
                 std::cerr << m_components[i] << ' ';
         }
-        bool operator==(ColorMap c1) const
+        bool operator==(const ColorMap& c1) const
         {
             assert(c1.numComponents() == numComponents());
             for (auto i = 0U; i < numComponents(); i++)
@@ -60,11 +63,8 @@ namespace CIL {
         friend std::ostream& operator<<(std::ostream& os, CIL::ColorMap c1);
     };
 
-    ColorMap operator*(double val, const ColorMap& c1);
-    ColorMap operator*(const ColorMap& c1, double val);
-    ColorMap operator+(const ColorMap& c1, const ColorMap& c2);
-    ColorMap operator+(const ColorMap& c1, double val);
-    ColorMap operator+(double val, const ColorMap& c1);
+    bool operator==(const Vector3D& v, const ColorMap& c);
+    bool operator==(const ColorMap& c, const Vector3D& v);
 
     namespace Color {
         const ColorMap::ValueType

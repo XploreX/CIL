@@ -32,6 +32,7 @@ namespace CIL {
     };
 
     void invertColor(ImageInfo&);
+    void changeGamma(ImageInfo& img, const double samples_per_pixel);
     void changeContrast(ImageInfo& img, const double contrast);
     void changeBrightness(ImageInfo& img, int16_t brightness);
     void flipImage(ImageInfo& img, const Axis axis);

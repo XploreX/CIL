@@ -12,9 +12,10 @@
 namespace CIL {
     class ThreadHandler
     {
-        const int processor_count = (std::thread::hardware_concurrency()
-                                         ? std::thread::hardware_concurrency()
-                                         : 2);
+        const int processor_count = // 1;
+            (std::thread::hardware_concurrency()
+                 ? std::thread::hardware_concurrency()
+                 : 2);
         std::vector<std::thread> v;
         static int index;
 
@@ -45,7 +46,10 @@ namespace CIL {
         {
             assert(fn && "fn should not be empty!!");
             for (std::size_t i = 0; i < height; ++i)
+            {
+                std::cerr << "Processing row: " << i << "\n";
                 process_row(i, width);
+            }
             joinAll();
         }
 

@@ -1,4 +1,5 @@
 #include <CIL/Drawing.hpp>
+#include <CIL/RayTracing/Vector3D.hpp>
 #include <catch2/catch.hpp>
 
 TEST_CASE("drawing-1", "[drawing][colormap]")

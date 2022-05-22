@@ -2,12 +2,14 @@
 #define CIL_VECTOR_3D_H
 
 #include <CIL/Color.hpp>
+#include <CIL/Core/Utils.hpp>
 #include <CIL/Drawing.hpp>
 #include <cmath>
 #include <iostream>
 #include <vector>
 
 namespace CIL {
+
     class Vector3D
     {
       public:
@@ -54,6 +56,7 @@ namespace CIL {
         Vector3D getInRange0to1();
 
         Vector3D& operator/=(const double t) { return *this *= 1 / t; }
+        bool operator==(const Vector3D& v) const { return coord == v.coord; }
 
         double magnitude() const { return sqrt(magnitude_squared()); }
 
@@ -61,6 +64,32 @@ namespace CIL {
         {
             return coord[0] * coord[0] + coord[1] * coord[1] +
                    coord[2] * coord[2];
+        }
+
+        inline static Vector3D random(double min = 0, double max = 1)
+        {
+            return Vector3D(utils::random_double(min, max),
+                            utils::random_double(min, max),
+                            utils::random_double(min, max));
+        }
+
+        inline static Vector3D randomInUnitSphere()
+        {
+            while (true)
+            {
+                Vector3D p = Vector3D::random(-1, 1);
+                if (p.magnitude_squared() >= 1)
+                    continue;
+                return p;
+            }
+        }
+
+        bool near_zero() const
+        {
+            // Return true if the vector is close to zero in all dimensions.
+            const auto s = 1e-8;
+            return (fabs(coord[0]) < s) && (fabs(coord[1]) < s) &&
+                   (fabs(coord[2]) < s);
         }
 
       public:
@@ -129,10 +158,12 @@ namespace CIL {
         auto p = p2 - p1;
         return p.magnitude();
     }
+
     inline Vector3D Vector3D::getInRange0to1()
     {
         return (unit_vector(*this) + 1.0) * 0.5;
     }
+
 } // namespace CIL
 
 #endif

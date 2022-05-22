@@ -13,8 +13,10 @@ namespace CIL {
     {
       public:
         Sphere(const Point3D& center, double radius,
-               std::function<void(const Ray& ray, HitInfo& hit_info)> color)
-            : m_center(center), m_radius(radius), m_set_color(color)
+               std::shared_ptr<Material> material,
+               std::function<ColorMap(const Ray& ray, HitInfo& hit_info)> color)
+            : m_center(center), m_radius(radius), m_material_ptr(material),
+              m_set_color(color)
         {}
 
         bool hit(const Ray& ray, double dist_begin, double dist_end,
@@ -31,11 +33,11 @@ namespace CIL {
             auto sqrt_d = std::sqrt(D);
             auto t = (-b - sqrt_d) / (2 * a);
             auto distance = ray.length(t);
-            if (distance < dist_begin || distance >= dist_end)
+            if (distance < dist_begin || distance >= dist_end || t <= 0)
             {
                 t = (-b + sqrt_d) / (2 * a);
                 distance = ray.length(t);
-                if (distance < dist_begin || distance >= dist_end)
+                if (distance < dist_begin || distance >= dist_end || t <= 0)
                     return false;
             }
 
@@ -45,7 +47,9 @@ namespace CIL {
             Vector3D outward_normal = (hit_info.hit_point - m_center) /
                                       m_radius;
             hit_info.set_normal(ray, outward_normal);
-            m_set_color(ray, hit_info);
+            hit_info.color = m_set_color(ray, hit_info);
+            hit_info.hit_background = false;
+            hit_info.material_ptr = m_material_ptr;
 
             return true;
         }
@@ -53,7 +57,8 @@ namespace CIL {
       private:
         Point3D m_center;
         double m_radius;
-        std::function<void(const Ray& ray, HitInfo& hit_info)> m_set_color;
+        std::shared_ptr<Material> m_material_ptr;
+        std::function<ColorMap(const Ray& ray, HitInfo& hit_info)> m_set_color;
     };
 } // namespace CIL
 

@@ -15,7 +15,7 @@ namespace CIL {
     class World
     {
       public:
-        World(std::size_t samples = 1) : m_samples(samples) {};
+        World(std::size_t samples = 1) : m_samples(samples){};
 
         void add(std::shared_ptr<Object> object)
         {

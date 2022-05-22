@@ -10,7 +10,7 @@
 
 #include <limits>
 
-CIL::World world(8);
+CIL::World world(45);
 
 int main(int argc, const char** argv)
 {
@@ -55,7 +55,8 @@ int main(int argc, const char** argv)
                         [](const CIL::Ray& r, CIL::HitInfo& hit_info) {
                             UNUSED(r);
                             UNUSED(hit_info);
-                            CIL::ColorMap color = CIL::Color::GREEN;
+                            CIL::ColorMap color = static_cast<CIL::ColorMap>(
+                                255.0 * hit_info.normal.getInRange0to1());
                             return color;
                         }));
 

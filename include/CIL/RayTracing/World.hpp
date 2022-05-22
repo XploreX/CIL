@@ -65,7 +65,7 @@ namespace CIL {
                     auto out = rayColor(scattered, depth + 1);
                     //                    show(attenuation);
                     //                    show(out);
-                    out = attenuation * out;
+                    out = attenuation * out * hit_info.color / 128;
                     // show(out);
                     return out;
                 }

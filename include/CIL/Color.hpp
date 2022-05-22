@@ -8,6 +8,7 @@
 #include <vector>
 
 namespace CIL {
+    class Vector3D;
     class ColorMap
     {
       public:
@@ -33,6 +34,7 @@ namespace CIL {
                                       ? max
                                       : components[i];
         }
+        explicit ColorMap(const CIL::Vector3D& v);
         ColorMap(const ColorMap& other) : m_components(other.m_components) {}
         ColorMap& operator=(const ColorMap& rhs)
         {
@@ -61,8 +63,8 @@ namespace CIL {
     ColorMap operator*(double val, const ColorMap& c1);
     ColorMap operator*(const ColorMap& c1, double val);
     ColorMap operator+(const ColorMap& c1, const ColorMap& c2);
-    ColorMap operator+(const ColorMap& c1, typename ColorMap::ValueType val);
-    ColorMap operator+(typename ColorMap::ValueType val, const ColorMap& c1);
+    ColorMap operator+(const ColorMap& c1, double val);
+    ColorMap operator+(double val, const ColorMap& c1);
 
     namespace Color {
         const ColorMap::ValueType

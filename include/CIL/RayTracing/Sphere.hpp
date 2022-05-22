@@ -6,13 +6,15 @@
 #include <CIL/RayTracing/Object.hpp>
 #include <CIL/RayTracing/Ray.hpp>
 #include <CIL/RayTracing/Vector3D.hpp>
+#include <functional>
 
 namespace CIL {
     class Sphere : public Object
     {
       public:
-        Sphere(const Point3D& center, double radius, const ColorMap& color)
-            : m_center(center), m_radius(radius), m_color(color)
+        Sphere(const Point3D& center, double radius,
+               std::function<void(const Ray& ray, HitInfo& hit_info)> color)
+            : m_center(center), m_radius(radius), m_set_color(color)
         {}
 
         bool hit(const Ray& ray, double dist_begin, double dist_end,
@@ -39,14 +41,19 @@ namespace CIL {
 
             hit_info.hit_point = ray.at(t);
             hit_info.distance = distance;
-            hit_info.color = m_color;
+
+            Vector3D outward_normal = (hit_info.hit_point - m_center) /
+                                      m_radius;
+            hit_info.set_normal(ray, outward_normal);
+            m_set_color(ray, hit_info);
+
             return true;
         }
 
       private:
         Point3D m_center;
         double m_radius;
-        ColorMap m_color;
+        std::function<void(const Ray& ray, HitInfo& hit_info)> m_set_color;
     };
 } // namespace CIL
 

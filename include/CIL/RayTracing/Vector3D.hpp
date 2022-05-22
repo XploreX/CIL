@@ -1,9 +1,11 @@
 #ifndef CIL_VECTOR_3D_H
 #define CIL_VECTOR_3D_H
 
+#include <CIL/Color.hpp>
 #include <CIL/Drawing.hpp>
 #include <cmath>
 #include <iostream>
+#include <vector>
 
 namespace CIL {
     class Vector3D
@@ -11,6 +13,12 @@ namespace CIL {
       public:
         Vector3D() : coord{0, 0, 0} {}
         Vector3D(double x, double y, double z) : coord{x, y, z} {}
+        Vector3D(const CIL::ColorMap& c)
+        {
+            coord.resize(c.numComponents());
+            for (auto i = 0U; i < c.numComponents(); i++)
+                coord[i] = c[i];
+        }
 
         double& x() { return coord[0]; }
         double& y() { return coord[1]; }
@@ -43,6 +51,8 @@ namespace CIL {
             return *this;
         }
 
+        Vector3D getInRange0to1();
+
         Vector3D& operator/=(const double t) { return *this *= 1 / t; }
 
         double magnitude() const { return sqrt(magnitude_squared()); }
@@ -54,7 +64,7 @@ namespace CIL {
         }
 
       public:
-        double coord[3];
+        std::vector<double> coord;
     };
 
     // Type aliases for Vec3D
@@ -89,7 +99,13 @@ namespace CIL {
         return Vector3D(t * v.coord[0], t * v.coord[1], t * v.coord[2]);
     }
 
+    inline Vector3D operator+(double t, const Vector3D& v)
+    {
+        return Vector3D(t + v.coord[0], t + v.coord[1], t + v.coord[2]);
+    }
+
     inline Vector3D operator*(const Vector3D& v, double t) { return t * v; }
+    inline Vector3D operator+(const Vector3D& v, double t) { return t + v; }
 
     inline Vector3D operator/(Vector3D v, double val) { return (1 / val) * v; }
 
@@ -112,6 +128,10 @@ namespace CIL {
     {
         auto p = p2 - p1;
         return p.magnitude();
+    }
+    inline Vector3D Vector3D::getInRange0to1()
+    {
+        return (unit_vector(*this) + 1.0) * 0.5;
     }
 } // namespace CIL
 

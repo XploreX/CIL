@@ -8,8 +8,8 @@
 
 #include <limits>
 #include <memory>
-#include <vector>
 #include <random>
+#include <vector>
 
 namespace CIL {
     class World

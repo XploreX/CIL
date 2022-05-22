@@ -29,9 +29,9 @@ namespace CIL {
                     double x_rand = 0, double y_rand = 0) const
         {
             double normalised_x = static_cast<double>(p.col() + x_rand) /
-                                  (img_data.width());
+                                  (img_data.width() - 1 + x_rand);
             double normalised_y = 1 - static_cast<double>(p.row() + y_rand) /
-                                          (img_data.height());
+                                          (img_data.height() - 1 + y_rand);
             return get_ray(normalised_x, normalised_y);
         }
 

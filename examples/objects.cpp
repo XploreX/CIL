@@ -8,7 +8,7 @@
 
 #include <limits>
 
-CIL::World world(32);
+CIL::World world(8);
 
 int main(int argc, const char** argv)
 {

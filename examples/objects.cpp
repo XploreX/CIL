@@ -10,7 +10,7 @@
 
 #include <limits>
 
-CIL::World world(8);
+CIL::World world(48);
 
 int main(int argc, const char** argv)
 {
@@ -26,7 +26,8 @@ int main(int argc, const char** argv)
     auto viewport_width = aspect_ratio * viewport_height;
     auto focal_length = 1.0;
 
-    CIL::Camera cam(viewport_width, viewport_height, focal_length);
+    CIL::Camera cam(viewport_width, viewport_height, focal_length, {0, 2, 4}, {0, 1, 3}, {0, 1, -1});
+    // CIL::Camera cam(viewport_width, viewport_height, focal_length);
 
     // Image
     const int image_width = 1280;
@@ -47,8 +48,8 @@ int main(int argc, const char** argv)
             return o;
         }));
 
-    auto material1 = std::shared_ptr<CIL::Lambertian>(
-        new CIL::Lambertian(CIL::Vector3D(0.4, 0.2, 0.5)));
+    auto material1 = std::shared_ptr<CIL::Material>(
+        new CIL::Metal(CIL::Vector3D(0.4, 0.2, 0.5)));
 
     auto ground = std::shared_ptr<CIL::Object>(
         new CIL::Sphere(CIL::Point3D(0, -100.5, -1), 100, material1,
